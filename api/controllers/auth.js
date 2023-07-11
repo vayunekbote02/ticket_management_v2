@@ -29,7 +29,10 @@ const register = async (req, res) => {
   } catch (error) {
     if (error.code === 11000) {
       // Duplicate email address
-      res.json({ status: 11000, error: "Duplicate email address" });
+      res.json({
+        status: 11000,
+        error: "An account with this email address already exists!",
+      });
     } else {
       res.json({ status: 404, error: "Signup failed" });
     }
@@ -63,9 +66,10 @@ const login = async (req, res) => {
           httpOnly: true,
           domain: "localhost",
           sameSite: "none",
+          secure: true,
         })
-        .status(200)
         .json({
+          status: 200,
           message: "Logged in successfully 😊 👌",
           id: user.userId,
         });

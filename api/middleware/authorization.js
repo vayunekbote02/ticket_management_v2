@@ -6,7 +6,8 @@ const jwt = require("jsonwebtoken");
 const authenticateToken = (req, res, next) => {
   try {
     // Retrieve the token from the request headers
-    const token = req.cookies.access_token;
+    const token = req.cookies["access_token"];
+    // console.log("Token is ", token); // debug
 
     if (!token) {
       // Token not provided, return unauthorized
@@ -17,9 +18,10 @@ const authenticateToken = (req, res, next) => {
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
       if (err) {
         // Token verification failed, return forbidden
+
         return res.sendStatus(403);
       }
-
+      // console.log("Passed verification!"); //debug
       // Token is valid, set the userId on the request object, this ayload userId is being signed while login
       req.userId = payload.userId;
       next();

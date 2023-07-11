@@ -4,7 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/auth.js");
-const authenticateToken = require("./middleware/authorization"); //Remove later
+const userRoutes = require("./routes/user.js");
 
 // Connecting to database
 mongoose
@@ -31,31 +31,7 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.get("/api/user/:userId/tickets", authenticateToken, (req, res) => {
-  if (req.userId === req.params.userId) {
-    return res.json({ text: `Authenticated ${req.userId}` });
-  } else {
-    return res.json({ text: "Failed to connect" });
-  }
-});
-
-app.get("/setcookie", (req, res) => {
-  res.cookie(`Cookie token name`, `encrypted cookie string Value`, {
-    maxAge: 5000,
-    // expires works the same as the maxAge
-    expires: new Date("01 12 2021"),
-    secure: true,
-    httpOnly: true,
-    sameSite: "lax",
-  });
-  res.send("Cookie have been saved successfully");
-});
-
-app.get("/getcookie", (req, res) => {
-  //show the saved cookies
-  console.log(req.cookies);
-  res.send(req.cookies);
-});
+app.use("/api/user", userRoutes);
 
 // Starting the server
 app.listen(8080, () => {
