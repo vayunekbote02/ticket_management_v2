@@ -18,7 +18,8 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.1",
-    "mongoose": "^7.3.2"
+    "mongoose": "^7.3.2",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

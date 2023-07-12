@@ -21,7 +21,7 @@ const authenticateToken = (req, res, next) => {
 
         return res.sendStatus(403);
       }
-      // console.log("Passed verification!"); //debug
+      // console.log("Password verified!"); //debug
       // Token is valid, set the userId on the request object, this ayload userId is being signed while login
       req.userId = payload.userId;
       next();

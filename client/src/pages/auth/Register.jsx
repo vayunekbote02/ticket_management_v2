@@ -147,7 +147,7 @@ const Register = () => {
                 </div>
               </div>
             </div>
-            <div className="order-first hidden w-full lg:block">
+            <div className="order-first hidden md:block w-full">
               <img
                 className="object-cover h-full bg-cover rounded-l-lg"
                 src="https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"

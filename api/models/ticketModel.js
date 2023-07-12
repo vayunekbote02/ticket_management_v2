@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const ticketSchema = new mongoose.Schema({
-  id: { type: Number, required: true },
+  id: { type: String, required: true },
+  byUser: { type: Number, required: true },
   name: { type: String, required: true },
   email: { type: String, required: true },
   phoneNumber: { type: String, required: true },

@@ -110,7 +110,7 @@ const Login = () => {
                 </div>
               </div>
             </div>
-            <div className="order-first hidden w-50  lg:block">
+            <div className="order-first lg:block hidden w-full">
               <img
                 className="object-cover h-full bg-cover rounded-l-lg"
                 src="https://images.pexels.com/photos/3959482/pexels-photo-3959482.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"

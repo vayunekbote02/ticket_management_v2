@@ -19,7 +19,6 @@ const UserTickets = () => {
 
         const data = await res.data;
         if (data.status === 200) {
-          console.log(data);
           setUserTickets(data.tickets);
         } else if (data.status === 403) {
           navigate("/unauthorized");
@@ -33,6 +32,10 @@ const UserTickets = () => {
 
     fetchTickets();
   }, [user_id, navigate]);
+
+  const handleTicketClick = (ticketId) => {
+    navigate(`/user/ticket_details/${ticketId}`);
+  };
 
   const sortedTickets = userTickets.sort((a, b) => {
     if (a.resolved === b.resolved) {
@@ -64,7 +67,7 @@ const UserTickets = () => {
                     <h3 className="text-lg font-bold">Channel</h3>
                   </th>
                   <th className="py-2 px-4">
-                    <h3 className="text-lg font-bold">Date/Time</h3>
+                    <h3 className="text-lg font-bold">Created At</h3>
                   </th>
                   <th className="py-2 px-4">
                     <h3 className="text-lg font-bold">Resolved</h3>
@@ -75,7 +78,12 @@ const UserTickets = () => {
                 {sortedTickets.map((ticket, index) => (
                   <tr
                     key={ticket.id}
-                    className={index % 2 === 0 ? "bg-green-50" : ""}
+                    onClick={() => handleTicketClick(ticket.id)}
+                    className={
+                      ticket.resolved
+                        ? "bg-green-50 cursor-pointer border-b-2 border-slate-200 border-dashed"
+                        : "bg-red-50 cursor-pointer  border-b-2 border-gray-300 border-dashed"
+                    }
                   >
                     <td className="py-2 px-4 text-center">{ticket.issue}</td>
                     <td className="py-2 px-4 text-center">
