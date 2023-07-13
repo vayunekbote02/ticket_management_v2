@@ -23,11 +23,11 @@ const router = createBrowserRouter(
         <Route path=":user_id">
           <Route path="tickets" element={<UserTickets />} />
           <Route path="create_ticket" element={<CreateUserTicket />} />
+          <Route
+            path="ticket_details/:ticket_id"
+            element={<ViewTicketDetails />}
+          />
         </Route>
-        <Route
-          path="ticket_details/:ticket_id"
-          element={<ViewTicketDetails />}
-        />
       </Route>
     </Route>
   )

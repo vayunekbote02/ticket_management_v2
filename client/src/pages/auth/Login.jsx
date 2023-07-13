@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserRoleContext } from "../../contexts/userRoleContext";
 
 const Login = () => {
+  const { setUserRole } = useContext(UserRoleContext);
   const [obj, setObj] = useState({
     email: "",
     password: "",
@@ -26,6 +29,7 @@ const Login = () => {
       if (data.status === 200) {
         // document.cookie = `token=${data.user.token}; path=/`; // Set the token as a cookie
         const userId = data.id;
+        setUserRole(data.role);
         navigate(`/user/${userId}/tickets`);
       } else if (data.status === 401) {
         alert("Please check your email and password");

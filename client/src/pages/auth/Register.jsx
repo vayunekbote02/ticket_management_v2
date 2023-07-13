@@ -7,6 +7,7 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
+    role: "user",
   });
 
   const registerUser = async (event) => {

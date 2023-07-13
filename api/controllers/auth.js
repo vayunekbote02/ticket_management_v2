@@ -19,6 +19,7 @@ const register = async (req, res) => {
       email: req.body.email,
       name: req.body.name,
       password: hashedPassword,
+      role: req.body.role,
     });
 
     // Save the new user to the database
@@ -56,7 +57,7 @@ const login = async (req, res) => {
     if (passwordMatch) {
       // Generate a JWT token with user data
       const token = jwt.sign(
-        { userId: user.userId },
+        { userId: user.userId, userRole: user.role },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "1h" }
       );
@@ -72,6 +73,7 @@ const login = async (req, res) => {
           status: 200,
           message: "Logged in successfully 😊 👌",
           id: user.userId,
+          role: user.role,
         });
 
       //   return res.json({

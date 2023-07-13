@@ -1,15 +1,18 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserRoleContext } from "../../contexts/userRoleContext";
 
 const UserTickets = () => {
   const { user_id } = useParams();
   const [userTickets, setUserTickets] = useState([]);
   const navigate = useNavigate();
+  const { userRole, setUserRole } = useContext(UserRoleContext);
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const res = await axios.get(`/api/user/${user_id}/tickets`, {
+        const res = await axios.get(`/api/${userRole}/${user_id}/tickets`, {
           headers: {
             // Authorization: `Bearer ${cookies.token}`, // Include the token in the request headers
             "Content-Type": "application/json",
@@ -34,7 +37,7 @@ const UserTickets = () => {
   }, [user_id, navigate]);
 
   const handleTicketClick = (ticketId) => {
-    navigate(`/user/ticket_details/${ticketId}`);
+    navigate(`/user/${user_id}/ticket_details/${ticketId}`);
   };
 
   const sortedTickets = userTickets.sort((a, b) => {

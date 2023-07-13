@@ -24,6 +24,7 @@ const authenticateToken = (req, res, next) => {
       // console.log("Password verified!"); //debug
       // Token is valid, set the userId on the request object, this ayload userId is being signed while login
       req.userId = payload.userId;
+      req.role = payload.userRole;
       next();
     });
   } catch (error) {

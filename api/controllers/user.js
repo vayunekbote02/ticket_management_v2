@@ -68,4 +68,47 @@ const createTicket = async (req, res) => {
   }
 };
 
-module.exports = { fetchTickets, createTicket };
+const fetchSingleTicket = async (req, res) => {
+  try {
+    //authenticating the user
+    const { user_id } = req.params;
+    if (user_id !== req.userId) {
+      return res.sendStatus(403);
+    }
+
+    //once authenticated
+    const { ticket_id } = req.params;
+    const ticket = await Ticket.findOne({ id: ticket_id });
+    res.json({ status: 200, ticket });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const updateTicketStatus = async (req, res) => {
+  try {
+    //authenticating the user
+    const { user_id } = req.params;
+    if (user_id !== req.userId) {
+      return res.sendStatus(403);
+    }
+
+    //once authenticated
+    const { ticket_id } = req.params;
+    const filter = { id: ticket_id };
+    const update = { resolved: req.body.resolved };
+    const doc = await Ticket.findOneAndUpdate(filter, update, {
+      new: true,
+    });
+    res.json({ status: 200 });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = {
+  fetchTickets,
+  createTicket,
+  fetchSingleTicket,
+  updateTicketStatus,
+};
