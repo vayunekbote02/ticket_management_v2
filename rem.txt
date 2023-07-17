@@ -1,1 +1,11 @@
 In the dependency array of useEffect in UserTickets, add userRole if something breaks.
+
+if (data.role === "admin") {
+          localStorage.setItem("role", "9087-t1-vaek-123-riop");
+        } else if (data.role === "engineer") {
+          localStorage.setItem("role", "2069-t2-prlo-456-fiok");
+        } else {
+          localStorage.setItem("role", "4032-t3-raek-789-chop");
+        }
+
+On clicking on 1 of the names in the list, save the name in a state. When you do save changes, just send a request to the backend and save the selected users id in the assigned engineer field of the ticket.

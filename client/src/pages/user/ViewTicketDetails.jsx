@@ -1,16 +1,24 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useContext } from "react";
-import { UserRoleContext } from "../../contexts/userRoleContext";
+import { useSelect } from "downshift";
+import Autocomplete from "../../components/Autocomplete";
 
 const ViewTicketDetails = () => {
   const { user_id } = useParams();
   const { ticket_id } = useParams();
   const [ticket, setTicket] = useState({});
   const [status, setStatus] = useState(ticket.resolved);
-  const { userRole, setUserRole } = useContext(UserRoleContext);
-  // console.log("ViewTicketDetails", userRole);
+  const [showModal, setShowModal] = React.useState(false);
+  const [engineerId, setEngineerId] = useState("");
+  const userRole = localStorage.getItem("role");
+
+  const engineerList = JSON.parse(localStorage.getItem("engineers"));
+  const engineerInfo = engineerList.map((engineer) => [
+    engineer.name,
+    engineer.userId,
+  ]);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -20,11 +28,13 @@ const ViewTicketDetails = () => {
         const ticket = await res.data.ticket;
 
         if (isMounted) {
+          //remove this unnecessary line of code
           setTicket(ticket);
           setStatus(ticket.resolved);
         }
       } catch (error) {
         // Handle error
+        console.log(error);
       }
     };
 
@@ -57,6 +67,60 @@ const ViewTicketDetails = () => {
 
     updateResolvedStatus();
   }, [status, user_id, ticket_id]);
+
+  const handleAssignEngineer = async () => {
+    setShowModal(true);
+    if (localStorage.getItem("engineers") === null) {
+      try {
+        const res = await axios.get(
+          `/api/admin/${user_id}/engineers`,
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+              // Authorization: `Bearer ${cookies.token}`,
+            },
+          }
+        );
+        const data = await res.data;
+        if (data.status === 200) {
+          localStorage.setItem("engineers", JSON.stringify(data.engineers));
+          // console.log(JSON.parse(localStorage.getItem("engineers")));
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const handleInputChange = (value) => {
+    setEngineerId(value);
+  };
+
+  const setEngineer = async () => {
+    () => setShowModal(false);
+    try {
+      const res = await axios.put(
+        `/api/admin/${user_id}/ticket/${ticket_id}/set_engineer`,
+        {
+          engineerId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Authorization: `Bearer ${cookies.token}`,
+          },
+        }
+      );
+      const data = await res.data;
+      if (data.status === 200) {
+        console.log("assigned to engineer successfully!");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-500 to-green-200">
@@ -112,16 +176,64 @@ const ViewTicketDetails = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-center py-4 border-t border-gray-300">
+          <div className="flex gap-2 justify-center py-4 border-t border-gray-300">
             <button
               className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
               onClick={() => setStatus(!status)}
             >
               {status ? "Mark Unresolved" : "Mark Resolved"}
             </button>
+            {userRole === "9087-t1-vaek-123-riop" && (
+              <button
+                onClick={handleAssignEngineer}
+                className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+              >
+                Assign Engineer
+              </button>
+            )}
           </div>
         </div>
       </div>
+      {showModal ? (
+        <>
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none min-h-[50vh] max-h-[50vh]">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-3xl font-semibold">Type Engineer Name</h3>
+                </div>
+                {/*body*/}
+                <div className="relative p-4 flex-auto overflow-y-auto">
+                  <Autocomplete
+                    suggestions={engineerInfo}
+                    setEngineerId={handleInputChange}
+                  />
+                </div>
+                {/*footer*/}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                  <button
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={setEngineer}
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+      ) : null}
     </>
   );
 };
