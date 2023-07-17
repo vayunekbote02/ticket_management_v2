@@ -8,7 +8,8 @@ const UserTickets = () => {
   const { user_id } = useParams();
   const [userTickets, setUserTickets] = useState([]);
   const navigate = useNavigate();
-  const { userRole, setUserRole } = useContext(UserRoleContext);
+  const { userRole } = useContext(UserRoleContext);
+  // console.log(userRole);
   useEffect(() => {
     const fetchTickets = async () => {
       try {

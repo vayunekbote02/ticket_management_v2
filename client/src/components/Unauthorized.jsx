@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Unauthorized = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    navigate(-1);
+    navigate("/login");
   });
   return <h1>Sorry, but some error occurred.</h1>;
 };

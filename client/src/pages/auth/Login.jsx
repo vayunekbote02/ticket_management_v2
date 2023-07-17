@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { UserRoleContext } from "../../contexts/userRoleContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const { setUserRole } = useContext(UserRoleContext);
@@ -30,9 +32,16 @@ const Login = () => {
         // document.cookie = `token=${data.user.token}; path=/`; // Set the token as a cookie
         const userId = data.id;
         setUserRole(data.role);
+        if (data.role === "admin") {
+          localStorage.setItem("role", "9087-t1-vaek-123-riop");
+        } else if (data.role === "engineer") {
+          localStorage.setItem("role", "2069-t2-prlo-456-fiok");
+        } else {
+          localStorage.setItem("role", "4032-t3-raek-789-chop");
+        }
         navigate(`/user/${userId}/tickets`);
-      } else if (data.status === 401) {
-        alert("Please check your email and password");
+      } else if (data.status === 404) {
+        toast.error("Please check your email and password");
       }
     } catch (err) {
       console.error(err);

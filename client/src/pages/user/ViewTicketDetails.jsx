@@ -1,12 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useContext } from "react";
+import { UserRoleContext } from "../../contexts/userRoleContext";
 
 const ViewTicketDetails = () => {
   const { user_id } = useParams();
   const { ticket_id } = useParams();
   const [ticket, setTicket] = useState({});
   const [status, setStatus] = useState(ticket.resolved);
+  const { userRole, setUserRole } = useContext(UserRoleContext);
+  // console.log("ViewTicketDetails", userRole);
   useEffect(() => {
     let isMounted = true;
 
@@ -18,7 +22,6 @@ const ViewTicketDetails = () => {
         if (isMounted) {
           setTicket(ticket);
           setStatus(ticket.resolved);
-          console.log("Ticket fetched!");
         }
       } catch (error) {
         // Handle error
@@ -47,9 +50,8 @@ const ViewTicketDetails = () => {
             },
           }
         );
-        console.log("Resolved status updated successfully!");
       } catch (error) {
-        console.error("Failed to update resolved status:", error);
+        console.error(error);
       }
     };
 

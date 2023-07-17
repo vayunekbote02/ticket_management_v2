@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [obj, setObj] = useState({
@@ -26,9 +28,9 @@ const Register = () => {
 
       const data = response.data;
       if (data.error) {
-        alert(data.error);
+        toast.error(data.error);
       } else if (data.status === 200) {
-        alert("Your account has been created! Please login.");
+        toast.success("Your account has been created! Please login.");
       }
 
       setObj({

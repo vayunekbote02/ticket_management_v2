@@ -11,6 +11,7 @@ import CreateUserTicket from "../pages/user/CreateUserTicket";
 import UserRootLayout from "../pages/layout/UserRootLayout";
 import Unauthorized from "../components/Unauthorized";
 import ViewTicketDetails from "../pages/user/ViewTicketDetails";
+import CreateEngineer from "../pages/admin/CreateEngineer";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +22,7 @@ const router = createBrowserRouter(
       <Route path="register" element={<Register />} />
       <Route path="user" element={<UserRootLayout />}>
         <Route path=":user_id">
+          <Route path="create_engineer" element={<CreateEngineer />} />
           <Route path="tickets" element={<UserTickets />} />
           <Route path="create_ticket" element={<CreateUserTicket />} />
           <Route
