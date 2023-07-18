@@ -10,6 +10,8 @@ const CreateEngineer = () => {
   // console.log(userRole);
   const { user_id } = useParams();
   const [email, setEmail] = useState("");
+  const [showEngineers, setShowEngineers] = useState(false);
+  const [engineers, setEngineers] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     if (localStorage.getItem("role") !== "9087-t1-vaek-123-riop") {
@@ -18,7 +20,20 @@ const CreateEngineer = () => {
   });
 
   const fetchEngineers = async () => {
-    toast.info("Remember to write a function to fetch engineers!");
+    setShowEngineers(true);
+    try {
+      const res = await axios.get(
+        `/api/admin/${user_id}/engineers`,
+        {},
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      const data = await res.data;
+      setEngineers(data.engineers);
+    } catch (err) {
+      toast.error(err);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -37,7 +52,8 @@ const CreateEngineer = () => {
           "User has successfully been assigned the role of engineer."
         );
       } else if (data.status === 501) {
-        toast.error(data.text);
+        let a = data.text + ". Make sure user has registered.";
+        toast.error(a);
       }
     } catch (err) {
       console.log(err);
@@ -89,6 +105,57 @@ const CreateEngineer = () => {
         >
           See all engineers
         </button>
+        {showEngineers && (
+          <>
+            <div className="bg-white shadow-md rounded-md">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-blue-50 sticky top-0">
+                  <tr>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Name
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      Email
+                    </th>
+                  </tr>
+                </thead>
+              </table>
+              <div className="overflow-y-auto h-50">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {engineers.map((engineer) => (
+                      <tr key={engineer.id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">
+                            {engineer.name}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {engineer.email}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="text-end">
+              <h2 className="block text-md font-semibold text-gray-800">
+                There are{" "}
+                <span className="text-blue-300">{engineers.length}</span>{" "}
+                engineers.
+              </h2>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

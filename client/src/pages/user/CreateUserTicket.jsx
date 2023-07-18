@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateUserTicket = () => {
   // necessary initializations
@@ -38,7 +40,7 @@ const CreateUserTicket = () => {
       priority: "low",
       assignedEngineer: "",
     };
-    console.log(newComplaint);
+    // console.log(newComplaint);
 
     try {
       const response = await axios.post(
@@ -52,10 +54,10 @@ const CreateUserTicket = () => {
         }
       );
       const data = await response.data;
-      console.log(data);
+      // console.log(data);
       if (data.status === 200) {
         setStatus("success");
-        alert("Your ticket has been successfully created.");
+        toast.success("Your ticket has been successfully created.");
         navigate(`/user/${user_id}/tickets`);
         // Handle the created ticket
       } else {

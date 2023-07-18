@@ -1,24 +1,23 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelect } from "downshift";
 import Autocomplete from "../../components/Autocomplete";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ViewTicketDetails = () => {
   const { user_id } = useParams();
   const { ticket_id } = useParams();
-  const [ticket, setTicket] = useState({});
+  const [ticket, setTicket] = useState({}); //the ticket whose info is printed
   const [status, setStatus] = useState(ticket.resolved);
   const [showModal, setShowModal] = React.useState(false);
-  const [engineerId, setEngineerId] = useState("");
+  const [engineerId, setEngineerId] = useState(""); //id passed to backend
+  const [engineerName, setEngineerName] = useState(""); //used for frontend
+  const [engineerInfo, setEngineerInfo] = useState([]); //passed to autocomplete
+  const [nameForAE, setNameForAE] = useState(""); //to show name of assigned engineer on page load
   const userRole = localStorage.getItem("role");
 
-  const engineerList = JSON.parse(localStorage.getItem("engineers"));
-  const engineerInfo = engineerList.map((engineer) => [
-    engineer.name,
-    engineer.userId,
-  ]);
-
+  //initial useEffect to fetch all the tickets
   useEffect(() => {
     let isMounted = true;
 
@@ -45,6 +44,47 @@ const ViewTicketDetails = () => {
     };
   }, [user_id, ticket_id]);
 
+  //for loading the engineer name on page load, so that it can be used to show engineer name in assignedEngineer field.
+  useMemo(() => {
+    const fetchEngineers = async () => {
+      try {
+        const res = await axios.get(
+          `/api/admin/${user_id}/engineers`,
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+              // Authorization: `Bearer ${cookies.token}`,
+            },
+          }
+        );
+        const data = await res.data;
+        if (data.status === 200) {
+          const engineerList = data.engineers;
+          const engineerInfoScope = engineerList.map((engineer) => [
+            engineer.name,
+            engineer.userId,
+          ]);
+          setEngineerInfo(engineerInfoScope);
+          const assignedEngineerToSet = engineerInfo.find(
+            (engineer) => engineer[1] === ticket.assignedEngineer
+          );
+
+          const assignedEngineerName = assignedEngineerToSet
+            ? assignedEngineerToSet[0]
+            : null;
+          // console.log("engineers fetched");
+          setNameForAE(assignedEngineerName);
+          // console.log("fetchEngineersFirst was run!");
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchEngineers();
+  }, [ticket]);
+
   useEffect(() => {
     const updateResolvedStatus = async () => {
       try {
@@ -60,6 +100,7 @@ const ViewTicketDetails = () => {
             },
           }
         );
+        // console.log("update status run!");
       } catch (error) {
         console.error(error);
       }
@@ -70,35 +111,39 @@ const ViewTicketDetails = () => {
 
   const handleAssignEngineer = async () => {
     setShowModal(true);
-    if (localStorage.getItem("engineers") === null) {
-      try {
-        const res = await axios.get(
-          `/api/admin/${user_id}/engineers`,
-          {},
-          {
-            headers: {
-              "Content-Type": "application/json",
-              // Authorization: `Bearer ${cookies.token}`,
-            },
-          }
-        );
-        const data = await res.data;
-        if (data.status === 200) {
-          localStorage.setItem("engineers", JSON.stringify(data.engineers));
-          // console.log(JSON.parse(localStorage.getItem("engineers")));
+    try {
+      const res = await axios.get(
+        `/api/admin/${user_id}/engineers`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Authorization: `Bearer ${cookies.token}`,
+          },
         }
-      } catch (err) {
-        console.log(err);
+      );
+      const data = await res.data;
+      if (data.status === 200) {
+        const engineerList = data.engineers;
+        const engineerInfoScope = engineerList.map((engineer) => [
+          engineer.name,
+          engineer.userId,
+        ]);
+        setEngineerInfo(engineerInfoScope);
+        // console.log(JSON.parse(localStorage.getItem("engineers")));
       }
+    } catch (err) {
+      console.log(err);
     }
   };
 
   const handleInputChange = (value) => {
-    setEngineerId(value);
+    setEngineerId(value[1]);
+    setEngineerName(value[0]);
   };
 
   const setEngineer = async () => {
-    () => setShowModal(false);
+    setShowModal(false);
     try {
       const res = await axios.put(
         `/api/admin/${user_id}/ticket/${ticket_id}/set_engineer`,
@@ -114,7 +159,7 @@ const ViewTicketDetails = () => {
       );
       const data = await res.data;
       if (data.status === 200) {
-        console.log("assigned to engineer successfully!");
+        toast.success(`The ticket has been assigned to ${engineerName}`);
       }
     } catch (err) {
       console.log(err);
@@ -170,8 +215,16 @@ const ViewTicketDetails = () => {
                 <span className="font-bold text-blue-800">Priority: </span>
                 <span className="ml-2 text-gray-700">{ticket.priority}</span>
               </div>
+              {userRole !== "2069-t2-prlo-456-fiok" && (
+                <div className="flex items-center">
+                  <span className="font-bold text-blue-800">Assigned To: </span>
+                  <span className="ml-2 text-gray-700">
+                    {ticket.assignedEngineer ? nameForAE : "Not Assigned"}
+                  </span>
+                </div>
+              )}
               <div className="flex items-center">
-                <span className="font-bold text-blue-800">Remarks: </span>
+                <span className="font-bold text-blue-800">User Remarks: </span>
                 <span className="ml-2 text-gray-700">{ticket.remarks}</span>
               </div>
             </div>

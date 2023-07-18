@@ -1,12 +1,10 @@
 import React from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { UserRoleContext } from "../contexts/userRoleContext";
-import { useContext } from "react";
 
 const Navbar = () => {
   const { user_id } = useParams();
   const navigate = useNavigate();
-  const { userRole } = useContext(UserRoleContext);
+  const userRole = localStorage.getItem("role");
   return (
     <header className="text-gray-600 body-font shadow-lg rounded-xl bg-slate-50">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
@@ -25,11 +23,13 @@ const Navbar = () => {
           <span className="ml-2 text-xl">Global Infocomm</span>
         </a>
         <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
-          <Link to={`/user/${user_id}/create_ticket`}>
-            <span className="mr-5 hover:text-gray-900 text-blue-500 ">
-              Create Ticket
-            </span>
-          </Link>
+          {userRole != "2069-t2-prlo-456-fiok" && (
+            <Link to={`/user/${user_id}/create_ticket`}>
+              <span className="mr-5 hover:text-gray-900 text-blue-500 ">
+                Create Ticket
+              </span>
+            </Link>
+          )}
           <Link to={`/user/${user_id}/tickets`}>
             <span className="mr-5 hover:text-gray-900 text-green-500">
               View Tickets

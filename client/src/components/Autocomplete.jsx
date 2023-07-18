@@ -30,10 +30,10 @@ const Autocomplete = (props) => {
     );
 
     // Extract the userId from the selected engineer array
-    const selectedUserId = selectedEngineer[1] || null;
+    // const selectedUserId = selectedEngineer[1] || null;
 
     // Call the setEngineerId function passed from the parent component
-    props.setEngineerId(selectedUserId);
+    props.setEngineerId(selectedEngineer);
   };
   const onKeyDown = (e) => {
     if (e.keyCode === 13) {
@@ -53,7 +53,7 @@ const Autocomplete = (props) => {
     if (isShow && input) {
       if (filtered.length) {
         return (
-          <ul className="autocomplete">
+          <ul className="autocomplete cursor-pointer">
             {filtered.map((suggestion, index) => {
               let className;
               if (index === active) {

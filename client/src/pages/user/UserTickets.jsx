@@ -9,6 +9,7 @@ const UserTickets = () => {
   const [userTickets, setUserTickets] = useState([]);
   const navigate = useNavigate();
   const { userRole } = useContext(UserRoleContext);
+  const role = localStorage.getItem("role");
   // console.log(userRole);
   useEffect(() => {
     const fetchTickets = async () => {
@@ -54,7 +55,11 @@ const UserTickets = () => {
         <h2 className="text-3xl font-bold text-center mb-4">My Tickets</h2>
         {userTickets.length === 0 ? (
           <p className="text-lg text-center">
-            You have not created any tickets yet.
+            {role === "9087-t1-vaek-123-riop"
+              ? "No one has created any tickets, what a surprise! Either the systems are working really well, or there is an error!"
+              : role === "2069-t2-prlo-456-fiok"
+              ? "You have not been assigned any tickets yet"
+              : "You have not created any tickets yet."}
           </p>
         ) : (
           <div className="overflow-x-auto">
