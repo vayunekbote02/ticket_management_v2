@@ -31,7 +31,9 @@ const Login = () => {
       if (data.status === 200) {
         // document.cookie = `token=${data.user.token}; path=/`; // Set the token as a cookie
         const userId = data.id;
+        localStorage.setItem("uid", userId);
         setUserRole(data.role);
+        localStorage.setItem("li", true);
         if (data.role === "admin") {
           localStorage.setItem("role", "9087-t1-vaek-123-riop");
         } else if (data.role === "engineer") {
@@ -41,7 +43,9 @@ const Login = () => {
         }
         navigate(`/user/${userId}/tickets`);
       } else if (data.status === 404) {
-        toast.error("Please check your email and password");
+        toast.error("Please check your email");
+      } else if (data.status === 401) {
+        toast.error("Please check you password.");
       }
     } catch (err) {
       console.error(err);
@@ -96,7 +100,7 @@ const Login = () => {
                 <div className="flex flex-col mt-4 lg:space-y-2">
                   <button
                     type="button"
-                    className="flex items-center justify-center w-full px-10 py-4 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-green-600 rounded-xl hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="flex items-center justify-center w-full px-10 py-4 text-base font-medium text-center text-white transition duration-500 ease-in-out transform bg-lime-600 rounded-xl hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     onClick={handleSubmit}
                   >
                     Login

@@ -12,11 +12,12 @@ import UserRootLayout from "../pages/layout/UserRootLayout";
 import Unauthorized from "../components/Unauthorized";
 import ViewTicketDetails from "../pages/user/ViewTicketDetails";
 import CreateEngineer from "../pages/admin/CreateEngineer";
+import LandingPage from "../pages/landing/LandingPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
-      <Route index element={<h1>This page does not exist</h1>} />
+      <Route index element={<LandingPage />} />
       <Route path="unauthorized" element={<Unauthorized />} />
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />

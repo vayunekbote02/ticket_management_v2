@@ -85,6 +85,7 @@ const Autocomplete = (props) => {
           className="border border-1 padding-8 w-full font-semibold"
           onChange={onChange}
           onKeyDown={onKeyDown}
+          placeholder="start typing to see engineer names"
           value={input}
         />
         {renderAutocomplete()}

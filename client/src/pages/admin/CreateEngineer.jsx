@@ -108,7 +108,13 @@ const CreateEngineer = () => {
         {showEngineers && (
           <>
             <div className="bg-white shadow-md rounded-md">
-              <table className="min-w-full divide-y divide-gray-200">
+              <table className="min-w-full divide-gray-200 table-layout-fixed">
+                <colgroup>
+                  <col className="w-1/2" />{" "}
+                  {/* Adjust the width based on your preference */}
+                  <col className="w-1/2" />{" "}
+                  {/* Adjust the width based on your preference */}
+                </colgroup>
                 <thead className="bg-blue-50 sticky top-0">
                   <tr>
                     <th
@@ -128,6 +134,12 @@ const CreateEngineer = () => {
               </table>
               <div className="overflow-y-auto h-50">
                 <table className="min-w-full divide-y divide-gray-200">
+                  <colgroup>
+                    <col className="w-1/2" />{" "}
+                    {/* Adjust the width based on your preference */}
+                    <col className="w-1/2" />{" "}
+                    {/* Adjust the width based on your preference */}
+                  </colgroup>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {engineers.map((engineer) => (
                       <tr key={engineer.id}>

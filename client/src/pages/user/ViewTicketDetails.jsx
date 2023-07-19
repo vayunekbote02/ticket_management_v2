@@ -159,7 +159,9 @@ const ViewTicketDetails = () => {
       );
       const data = await res.data;
       if (data.status === 200) {
-        toast.success(`The ticket has been assigned to ${engineerName}`);
+        toast.success(
+          `The ticket has been assigned to ${engineerName}. Refresh page to see changes.`
+        );
       }
     } catch (err) {
       console.log(err);

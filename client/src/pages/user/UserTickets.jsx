@@ -8,13 +8,21 @@ const UserTickets = () => {
   const { user_id } = useParams();
   const [userTickets, setUserTickets] = useState([]);
   const navigate = useNavigate();
-  const { userRole } = useContext(UserRoleContext);
   const role = localStorage.getItem("role");
+  const getRole = () => {
+    if (role === "9087-t1-vaek-123-riop") {
+      return "admin";
+    } else if (role === "2069-t2-prlo-456-fiok") {
+      return "engineer";
+    } else if (role === "4032-t3-raek-789-chop") {
+      return "user";
+    }
+  };
   // console.log(userRole);
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const res = await axios.get(`/api/${userRole}/${user_id}/tickets`, {
+        const res = await axios.get(`/api/${getRole()}/${user_id}/tickets`, {
           headers: {
             // Authorization: `Bearer ${cookies.token}`, // Include the token in the request headers
             "Content-Type": "application/json",
