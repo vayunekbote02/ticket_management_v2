@@ -4,6 +4,7 @@ const {
   assignRole,
   fetchEngineers,
   setEngineer,
+  acceptTicket,
 } = require("../controllers/admin.js");
 const authenticateToken = require("../middleware/authorization");
 
@@ -16,6 +17,11 @@ router.put(
   "/:user_id/ticket/:ticket_id/set_engineer",
   authenticateToken,
   setEngineer
+);
+router.put(
+  "/:user_id/ticket/:ticket_id/accept_ticket",
+  authenticateToken,
+  acceptTicket
 );
 
 module.exports = router;

@@ -13,11 +13,15 @@ import Unauthorized from "../components/Unauthorized";
 import ViewTicketDetails from "../pages/user/ViewTicketDetails";
 import CreateEngineer from "../pages/admin/CreateEngineer";
 import LandingPage from "../pages/landing/LandingPage";
+import ContactUsPage from "../pages/landing/ContactUsPage";
+import AboutUsPage from "../pages/landing/AboutUsPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
       <Route index element={<LandingPage />} />
+      <Route path="/contact" element={<ContactUsPage />} />
+      <Route path="/about" element={<AboutUsPage />} />
       <Route path="unauthorized" element={<Unauthorized />} />
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />

@@ -69,9 +69,29 @@ const setEngineer = async (req, res) => {
   return res.json({ status: 200 });
 };
 
+const acceptTicket = async (req, res) => {
+  const { user_id } = req.params;
+  const { ticket_id } = req.params;
+  if (user_id !== req.userId) {
+    return res.sendStatus(403);
+  }
+
+  const ticket = await Ticket.findOneAndUpdate(
+    { id: ticket_id },
+    { accepted: 1 },
+    { new: true }
+  );
+
+  if (!ticket) {
+    return res.json({ status: 501, text: "Error in accepting the ticket." });
+  }
+  return res.json({ status: 200 });
+};
+
 module.exports = {
   fetchTickets,
   fetchEngineers,
   assignRole,
   setEngineer,
+  acceptTicket,
 };

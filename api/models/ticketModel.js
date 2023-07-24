@@ -15,6 +15,7 @@ const ticketSchema = new mongoose.Schema({
   resolved: { type: Boolean, default: false },
   priority: { type: String, default: "low" },
   assignedEngineer: String,
+  accepted: { type: Number, default: 0 },
 });
 
 const Ticket = mongoose.model("Ticket", ticketSchema);

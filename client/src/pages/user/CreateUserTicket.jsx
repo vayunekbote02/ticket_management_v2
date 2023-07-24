@@ -13,13 +13,14 @@ const CreateUserTicket = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [issue, setIssue] = useState("");
+  const [showIssueInput, setShowIssueInput] = useState(false);
   const [remarks, setRemarks] = useState("");
   const [phone, setPhone] = useState("");
   const [landline, setLandline] = useState("");
   const [classification, setClassification] = useState("");
+  const [showClassificationInput, setShowClassificationInput] = useState(false);
   const [channel, setChannel] = useState("");
   const [status, setStatus] = useState(null);
-
   // main submit function
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -131,7 +132,10 @@ const CreateUserTicket = () => {
                 <select
                   className="w-full sm:w-2/3 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={issue}
-                  onChange={(e) => setIssue(e.target.value)}
+                  onChange={(e) => {
+                    setIssue(e.target.value);
+                    setShowIssueInput(e.target.value === "Others");
+                  }}
                 >
                   <option value="" disabled>
                     Your Issue
@@ -142,12 +146,29 @@ const CreateUserTicket = () => {
                   <option value="Others">Others</option>
                 </select>
               </div>
+              {showIssueInput && (
+                <div className="flex flex-col sm:flex-row items-center">
+                  <label className="w-full sm:w-1/3 text-emerald-600">
+                    Type your issue:
+                  </label>
+                  <input
+                    className="w-full sm:w-2/3 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={issue}
+                    onChange={(e) => {
+                      setIssue(e.target.value);
+                    }}
+                  />
+                </div>
+              )}
               <div className="flex flex-col sm:flex-row items-center">
-                <label className="w-full sm:w-1/3">Classification:</label>
+                <label className="w-full sm:w-1/3 ">Classification:</label>
                 <select
                   className="w-full sm:w-2/3 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={classification}
-                  onChange={(e) => setClassification(e.target.value)}
+                  onChange={(e) => {
+                    setClassification(e.target.value);
+                    setShowClassificationInput(e.target.value === "Others");
+                  }}
                 >
                   <option value="" disabled>
                     Select a classification
@@ -158,6 +179,20 @@ const CreateUserTicket = () => {
                   <option value="Others">Others</option>
                 </select>
               </div>
+              {showClassificationInput && (
+                <div className="flex flex-col sm:flex-row items-center">
+                  <label className="w-full sm:w-1/3 text-emerald-600">
+                    Type other classification:
+                  </label>
+                  <input
+                    className="w-full sm:w-2/3 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={classification}
+                    onChange={(e) => {
+                      setClassification(e.target.value);
+                    }}
+                  />
+                </div>
+              )}
               <div className="flex flex-col sm:flex-row items-center">
                 <label className="w-full sm:w-1/3">Channel:</label>
                 <select

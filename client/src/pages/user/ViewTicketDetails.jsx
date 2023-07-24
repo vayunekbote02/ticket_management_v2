@@ -168,6 +168,22 @@ const ViewTicketDetails = () => {
     }
   };
 
+  const acceptTicket = async () => {
+    try {
+      const res = await axios.put(
+        `/api/admin/${user_id}/ticket/${ticket_id}/accept_ticket`
+      );
+      const data = await res.data;
+      if (data.status === 200) {
+        toast.success(
+          `The ticket has been accepted. Refresh page to see changes.`
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-500 to-green-200">
@@ -217,6 +233,12 @@ const ViewTicketDetails = () => {
                 <span className="font-bold text-blue-800">Priority: </span>
                 <span className="ml-2 text-gray-700">{ticket.priority}</span>
               </div>
+              <div className="flex items-center">
+                <span className="font-bold text-blue-800">Accepted?: </span>
+                <span className="ml-2 text-gray-700">
+                  {ticket.accepted === 1 ? "Yes" : "No"}
+                </span>
+              </div>
               {userRole !== "2069-t2-prlo-456-fiok" && (
                 <div className="flex items-center">
                   <span className="font-bold text-blue-800">Assigned To: </span>
@@ -241,12 +263,22 @@ const ViewTicketDetails = () => {
             {userRole === "9087-t1-vaek-123-riop" && (
               <button
                 onClick={handleAssignEngineer}
-                className="px-6 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+                className="px-6 py-2 text-white bg-teal-500 rounded hover:bg-teal-600"
               >
                 Assign Engineer
               </button>
             )}
           </div>
+          {userRole === "9087-t1-vaek-123-riop" && (
+            <div className="text-center pb-4">
+              <button
+                onClick={acceptTicket}
+                className="py-2 px-6 text-white bg-gray-500 rounded hover:bg-gray-600"
+              >
+                Accept Ticket
+              </button>
+            </div>
+          )}
         </div>
       </div>
       {showModal ? (

@@ -44,7 +44,10 @@ const LandingPage = () => {
                 engineers take care of them.
               </p>
               <div className="text-center md:text-left">
-                <button className="px-4 py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600">
+                <button
+                  onClick={() => navigate("/about")}
+                  className="px-4 py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600"
+                >
                   Learn More
                 </button>
               </div>
@@ -72,7 +75,10 @@ const LandingPage = () => {
                 assist you with any technical issues you may encounter.
               </p>
               <div className="text-center md:text-right">
-                <button className="px-4 py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600">
+                <button
+                  onClick={() => navigate("/contact")}
+                  className="px-4 py-2 bg-blue-500 text-white font-bold rounded-md hover:bg-blue-600"
+                >
                   Contact Us
                 </button>
               </div>

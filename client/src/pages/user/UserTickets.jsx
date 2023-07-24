@@ -1,12 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useContext } from "react";
-import { UserRoleContext } from "../../contexts/userRoleContext"; //change to use localStorage
 
 const UserTickets = () => {
   const { user_id } = useParams();
   const [userTickets, setUserTickets] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState("all");
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
   const getRole = () => {
@@ -60,11 +59,35 @@ const UserTickets = () => {
   return (
     <div>
       <div className="p-4">
-        <h2 className="text-3xl font-bold text-center mb-4">My Tickets</h2>
+        <div className="grid grid-cols-12 justify-center items-center">
+          <h2
+            className={`text-3xl font-bold text-center mb-4 col-span-12 ${
+              role !== "2069-t2-prlo-456-fiok" && "md:col-span-10"
+            }`}
+          >
+            {role === "9087-t1-vaek-123-riop" ? (
+              <span>Tickets</span>
+            ) : (
+              <span>My Tickets</span>
+            )}
+          </h2>
+          {role !== "2069-t2-prlo-456-fiok" && (
+            <select
+              className="px-4 py-2 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 col-span-12 md:col-span-2"
+              value={selectedFilter}
+              onChange={(e) => setSelectedFilter(e.target.value)}
+            >
+              <option value="all">All Tickets</option>
+              <option value="accepted">Accepted Tickets</option>
+              <option value="notAccepted">Not Accepted Tickets</option>
+            </select>
+          )}
+        </div>
+
         {userTickets.length === 0 ? (
           <p className="text-lg text-center">
             {role === "9087-t1-vaek-123-riop"
-              ? "No one has created any tickets, what a surprise! Either the systems are working really well, or there is an error!"
+              ? "No one has created any tickets, what a surprise! Either the systems are working really well, or not at all!"
               : role === "2069-t2-prlo-456-fiok"
               ? "You have not been assigned any tickets yet"
               : "You have not created any tickets yet."}
@@ -74,6 +97,11 @@ const UserTickets = () => {
             <table className="w-full bg-white rounded-lg shadow">
               <thead>
                 <tr className="bg-blue-500 text-white">
+                  {role === "9087-t1-vaek-123-riop" && (
+                    <th className="py-2 px-4">
+                      <h3 className="text-lg font-bold">Name</h3>
+                    </th>
+                  )}
                   <th className="py-2 px-4">
                     <h3 className="text-lg font-bold">Issue</h3>
                   </th>
@@ -86,39 +114,73 @@ const UserTickets = () => {
                   <th className="py-2 px-4">
                     <h3 className="text-lg font-bold">Created At</h3>
                   </th>
+                  {role === "9087-t1-vaek-123-riop" && (
+                    <th className="py-2 px-4">
+                      <h3 className="text-lg font-bold">Accepted?</h3>
+                    </th>
+                  )}
                   <th className="py-2 px-4">
                     <h3 className="text-lg font-bold">Resolved</h3>
                   </th>
+                  {role === "9087-t1-vaek-123-riop" && (
+                    <th className="py-2 px-4">
+                      <h3 className="text-lg font-bold">Priority</h3>
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
-                {sortedTickets.map((ticket, index) => (
-                  <tr
-                    key={ticket.id}
-                    onClick={() => handleTicketClick(ticket.id)}
-                    className={
-                      ticket.resolved
-                        ? "bg-green-50 cursor-pointer border-b-2 border-slate-200 border-dashed"
-                        : "bg-red-50 cursor-pointer  border-b-2 border-gray-300 border-dashed"
+                {sortedTickets
+                  .filter((ticket) => {
+                    if (selectedFilter === "accepted") {
+                      return ticket.accepted === 1;
+                    } else if (selectedFilter === "notAccepted") {
+                      return ticket.accepted === 0;
                     }
-                  >
-                    <td className="py-2 px-4 text-center">{ticket.issue}</td>
-                    <td className="py-2 px-4 text-center">
-                      {ticket.classification}
-                    </td>
-                    <td className="py-2 px-4 text-center">{ticket.channel}</td>
-                    <td className="py-2 px-4 text-center">
-                      {new Date(ticket.createdAt).toLocaleString("en-IN", {
-                        timeZone: "Asia/Kolkata",
-                        dateStyle: "short",
-                        timeStyle: "short",
-                      })}
-                    </td>
-                    <td className="py-2 px-4 text-center">
-                      {ticket.resolved ? "Yes" : "No"}
-                    </td>
-                  </tr>
-                ))}
+                    return true;
+                  })
+                  .map((ticket, index) => (
+                    <tr
+                      key={ticket.id}
+                      onClick={() => handleTicketClick(ticket.id)}
+                      className={
+                        ticket.resolved
+                          ? "bg-green-50 cursor-pointer border-b-2 border-slate-200 border-dashed"
+                          : "bg-red-50 cursor-pointer  border-b-2 border-gray-300 border-dashed"
+                      }
+                    >
+                      {role === "9087-t1-vaek-123-riop" && (
+                        <td className="py-2 px-4 text-center">{ticket.name}</td>
+                      )}
+                      <td className="py-2 px-4 text-center">{ticket.issue}</td>
+                      <td className="py-2 px-4 text-center">
+                        {ticket.classification}
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        {ticket.channel}
+                      </td>
+                      <td className="py-2 px-4 text-center">
+                        {new Date(ticket.createdAt).toLocaleString("en-IN", {
+                          timeZone: "Asia/Kolkata",
+                          dateStyle: "short",
+                          timeStyle: "short",
+                        })}
+                      </td>
+                      {role === "9087-t1-vaek-123-riop" && (
+                        <td className="py-2 px-4 text-center">
+                          {ticket.accepted === 1 ? "Yes" : "No"}
+                        </td>
+                      )}
+                      <td className="py-2 px-4 text-center">
+                        {ticket.resolved ? "Yes" : "No"}
+                      </td>
+                      {role === "9087-t1-vaek-123-riop" && (
+                        <td className="py-2 px-4 text-center">
+                          {ticket.priority}
+                        </td>
+                      )}
+                    </tr>
+                  ))}
               </tbody>
             </table>
           </div>
