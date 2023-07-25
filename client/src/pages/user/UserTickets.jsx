@@ -59,6 +59,94 @@ const UserTickets = () => {
   return (
     <div>
       <div className="p-4">
+        {role === "9087-t1-vaek-123-riop" && (
+          <div className="max-w-full mx-4 sm:mx-auto sm:px-6 lg:px-8">
+            <div className="sm:flex sm:space-x-4">
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 w-full sm:w-1/3 sm:my-8">
+                <div className="bg-blue-100 p-5">
+                  <div className="sm:flex sm:items-start">
+                    <div className="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                      <h3 className="text-sm leading-6 font-medium text-gray-400">
+                        Total Tickets
+                      </h3>
+                      <p className="text-3xl font-bold text-black">
+                        {userTickets.length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 w-full sm:w-1/3 sm:my-8">
+                <div className="bg-slate-100 p-5">
+                  <div className="sm:flex sm:items-start">
+                    <div className="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                      <h3 className="text-sm leading-6 font-medium text-gray-400">
+                        Not accepted
+                      </h3>
+                      <p className="text-3xl font-bold text-black">
+                        {
+                          userTickets.filter((ticket) => ticket.accepted === 0)
+                            .length
+                        }
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 w-full sm:w-1/3 sm:my-8">
+                <div className="bg-teal-100 p-5">
+                  <div className="sm:flex sm:items-start">
+                    <div className="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                      <h3 className="text-sm leading-6 font-medium text-gray-400">
+                        Resolved
+                      </h3>
+                      <p className="text-3xl font-bold text-black">
+                        {userTickets.filter((ticket) => ticket.resolved).length}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 w-full sm:w-1/3 sm:my-8">
+                <div className="bg-red-50 p-5">
+                  <div className="sm:flex sm:items-start">
+                    <div className="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                      <h3 className="text-sm leading-6 font-medium text-gray-400">
+                        Unresolved
+                      </h3>
+                      <p className="text-3xl font-bold text-black">
+                        {" "}
+                        {
+                          userTickets.filter((ticket) => !ticket.resolved)
+                            .length
+                        }
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow transform transition-all mb-4 w-full sm:w-1/3 sm:my-8">
+                <div className="bg-yellow-100 p-5">
+                  <div className="sm:flex sm:items-start">
+                    <div className="text-center sm:mt-0 sm:ml-2 sm:text-left">
+                      <h3 className="text-sm leading-6 font-medium text-gray-400">
+                        High Priority
+                      </h3>
+                      <p className="text-3xl font-bold text-black">
+                        {" "}
+                        {
+                          userTickets.filter(
+                            (ticket) => ticket.priority === "high"
+                          ).length
+                        }
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="grid grid-cols-12 justify-center items-center">
           <h2
             className={`text-3xl font-bold text-center mb-4 col-span-12 ${
@@ -80,6 +168,7 @@ const UserTickets = () => {
               <option value="all">All Tickets</option>
               <option value="accepted">Accepted Tickets</option>
               <option value="notAccepted">Not Accepted Tickets</option>
+              <option value="highprior">High Priority Tickets</option>
             </select>
           )}
         </div>
@@ -136,6 +225,8 @@ const UserTickets = () => {
                       return ticket.accepted === 1;
                     } else if (selectedFilter === "notAccepted") {
                       return ticket.accepted === 0;
+                    } else if (selectedFilter === "highprior") {
+                      return ticket.priority === "high";
                     }
                     return true;
                   })

@@ -88,10 +88,31 @@ const acceptTicket = async (req, res) => {
   return res.json({ status: 200 });
 };
 
+const setPriority = async (req, res) => {
+  const { user_id } = req.params;
+  const { ticket_id } = req.params;
+  const { priority } = req.body;
+  if (user_id !== req.userId) {
+    return res.sendStatus(403);
+  }
+
+  const ticket = await Ticket.findOneAndUpdate(
+    { id: ticket_id },
+    { priority: priority },
+    { new: true }
+  );
+
+  if (!ticket) {
+    return res.json({ status: 501, text: "Error in setting priority." });
+  }
+  return res.json({ status: 200 });
+};
+
 module.exports = {
   fetchTickets,
   fetchEngineers,
   assignRole,
   setEngineer,
   acceptTicket,
+  setPriority,
 };

@@ -15,6 +15,7 @@ const ViewTicketDetails = () => {
   const [engineerName, setEngineerName] = useState(""); //used for frontend
   const [engineerInfo, setEngineerInfo] = useState([]); //passed to autocomplete
   const [nameForAE, setNameForAE] = useState(""); //to show name of assigned engineer on page load
+  const [selectedPriority, setSelectedPriority] = useState("set priority"); //to set the priority of the ticket in the backend
   const userRole = localStorage.getItem("role");
 
   //initial useEffect to fetch all the tickets
@@ -184,6 +185,32 @@ const ViewTicketDetails = () => {
     }
   };
 
+  const priorityFunc = async (e) => {
+    setSelectedPriority(e.target.value);
+    try {
+      const res = await axios.put(
+        `/api/admin/${user_id}/ticket/${ticket_id}/set_priority`,
+        {
+          priority: e.target.value,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            // Authorization: `Bearer ${cookies.token}`,
+          },
+        }
+      );
+      const data = await res.data;
+      if (data.status === 200) {
+        toast.success(
+          `The priority has been set to ${e.target.value}. Refresh page to see changes.`
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-500 to-green-200">
@@ -270,13 +297,27 @@ const ViewTicketDetails = () => {
             )}
           </div>
           {userRole === "9087-t1-vaek-123-riop" && (
-            <div className="text-center pb-4">
-              <button
-                onClick={acceptTicket}
-                className="py-2 px-6 text-white bg-gray-500 rounded hover:bg-gray-600"
+            <div className="flex justify-center gap-3 pb-4">
+              {ticket.accepted === 0 && (
+                <button
+                  onClick={acceptTicket}
+                  className="py-2 px-6 text-white bg-gray-500 rounded hover:bg-gray-600"
+                >
+                  Accept Ticket
+                </button>
+              )}
+              <select
+                className="px-4 py-2 mb-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 col-span-12 md:col-span-2"
+                value={selectedPriority}
+                onChange={priorityFunc}
               >
-                Accept Ticket
-              </button>
+                <option value="set priority" disabled>
+                  Set Priority
+                </option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+              </select>
             </div>
           )}
         </div>

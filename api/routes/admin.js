@@ -5,6 +5,7 @@ const {
   fetchEngineers,
   setEngineer,
   acceptTicket,
+  setPriority,
 } = require("../controllers/admin.js");
 const authenticateToken = require("../middleware/authorization");
 
@@ -22,6 +23,11 @@ router.put(
   "/:user_id/ticket/:ticket_id/accept_ticket",
   authenticateToken,
   acceptTicket
+);
+router.put(
+  "/:user_id/ticket/:ticket_id/set_priority",
+  authenticateToken,
+  setPriority
 );
 
 module.exports = router;
