@@ -16,6 +16,16 @@ const ticketSchema = new mongoose.Schema({
   priority: { type: String, default: "low" },
   assignedEngineer: String,
   accepted: { type: Number, default: 0 },
+  logs: [
+    {
+      timestamp: {
+        type: Date,
+        default: Date,
+      },
+      userRole: { type: String, required: true },
+      message: String,
+    },
+  ],
 });
 
 const Ticket = mongoose.model("Ticket", ticketSchema);

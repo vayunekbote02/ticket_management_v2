@@ -10,12 +10,13 @@ const ViewTicketDetails = () => {
   const { ticket_id } = useParams();
   const [ticket, setTicket] = useState({}); //the ticket whose info is printed
   const [status, setStatus] = useState(ticket.resolved);
-  const [showModal, setShowModal] = React.useState(false);
+  const [showModal, setShowModal] = React.useState(false); //to hide or show assign engineer modal
   const [engineerId, setEngineerId] = useState(""); //id passed to backend
   const [engineerName, setEngineerName] = useState(""); //used for frontend
   const [engineerInfo, setEngineerInfo] = useState([]); //passed to autocomplete
   const [nameForAE, setNameForAE] = useState(""); //to show name of assigned engineer on page load
   const [selectedPriority, setSelectedPriority] = useState("set priority"); //to set the priority of the ticket in the backend
+  const [showLogs, setShowLogs] = useState(false);
   const userRole = localStorage.getItem("role");
 
   //initial useEffect to fetch all the tickets
@@ -136,6 +137,10 @@ const ViewTicketDetails = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const logFunc = async () => {
+    setShowLogs(true);
   };
 
   const handleInputChange = (value) => {
@@ -320,6 +325,14 @@ const ViewTicketDetails = () => {
               </select>
             </div>
           )}
+          <div className="flex justify-center mb-4">
+            <button
+              onClick={logFunc}
+              className="py-2 px-6 text-white bg-teal-500 rounded hover:bg-emerald-600"
+            >
+              Show Logs
+            </button>
+          </div>
         </div>
       </div>
       {showModal ? (
@@ -360,6 +373,49 @@ const ViewTicketDetails = () => {
             </div>
           </div>
           <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+        </>
+      ) : null}
+      {showLogs ? (
+        <>
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none min-h-[50vh] max-h-[50vh]">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                  <h3 className="text-3xl font-semibold">Logs of ticket</h3>
+                </div>
+                {/*body*/}
+                <div className="relative p-4 flex-auto overflow-y-auto bg-slate-100">
+                  Hello
+                </div>
+                <div>
+                  <input
+                    className="p-4 w-full border border-1 border-black"
+                    placeholder="Type something..."
+                  />
+                </div>
+                {/*footer*/}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
+                  <button
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => setShowLogs(false)}
+                  >
+                    Close
+                  </button>
+                  <button
+                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={setEngineer}
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-60 fixed inset-0 z-40 bg-slate-900"></div>
         </>
       ) : null}
     </>
