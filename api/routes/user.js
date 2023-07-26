@@ -4,6 +4,7 @@ const {
   createTicket,
   fetchSingleTicket,
   updateTicketStatus,
+  addMessage,
 } = require("../controllers/user.js");
 const authenticateToken = require("../middleware/authorization");
 
@@ -16,6 +17,11 @@ router.put(
   "/:user_id/ticket/:ticket_id/update",
   authenticateToken,
   updateTicketStatus
+);
+router.put(
+  "/:user_id/ticket/:ticket_id/add_message",
+  authenticateToken,
+  addMessage
 );
 
 module.exports = router;

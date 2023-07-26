@@ -20,7 +20,7 @@ const ticketSchema = new mongoose.Schema({
     {
       timestamp: {
         type: Date,
-        default: Date,
+        default: Date.now(),
       },
       userRole: { type: String, required: true },
       message: String,

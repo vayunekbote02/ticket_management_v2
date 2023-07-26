@@ -1,13 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Autocomplete from "../../components/Autocomplete";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import TextModal from "../../components/TextModal";
 
 const ViewTicketDetails = () => {
   const { user_id } = useParams();
   const { ticket_id } = useParams();
+  const navigate = useNavigate();
   const [ticket, setTicket] = useState({}); //the ticket whose info is printed
   const [status, setStatus] = useState(ticket.resolved);
   const [showModal, setShowModal] = React.useState(false); //to hide or show assign engineer modal
@@ -17,7 +19,18 @@ const ViewTicketDetails = () => {
   const [nameForAE, setNameForAE] = useState(""); //to show name of assigned engineer on page load
   const [selectedPriority, setSelectedPriority] = useState("set priority"); //to set the priority of the ticket in the backend
   const [showLogs, setShowLogs] = useState(false);
+  const [textMessage, setTextMessage] = useState("");
+
   const userRole = localStorage.getItem("role");
+  const getRole = () => {
+    if (userRole === "9087-t1-vaek-123-riop") {
+      return "admin";
+    } else if (userRole === "2069-t2-prlo-456-fiok") {
+      return "engineer";
+    } else if (userRole === "4032-t3-raek-789-chop") {
+      return "user";
+    }
+  };
 
   //initial useEffect to fetch all the tickets
   useEffect(() => {
@@ -139,10 +152,6 @@ const ViewTicketDetails = () => {
     }
   };
 
-  const logFunc = async () => {
-    setShowLogs(true);
-  };
-
   const handleInputChange = (value) => {
     setEngineerId(value[1]);
     setEngineerName(value[0]);
@@ -210,6 +219,47 @@ const ViewTicketDetails = () => {
         toast.success(
           `The priority has been set to ${e.target.value}. Refresh page to see changes.`
         );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const sendTextMessage = async () => {
+    setShowLogs(false);
+    if (textMessage !== "") {
+      try {
+        const res = await axios.put(
+          `/api/${getRole()}/${user_id}/ticket/${ticket_id}/add_message`,
+          {
+            userRole,
+            textMessage,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              // Authorization: `Bearer ${cookies.token}`,
+            },
+          }
+        );
+        const data = await res.data;
+        if (data.status === 200) {
+          toast.success("Your comment has been added. Refresh to see changes.");
+        }
+      } catch (err) {
+        toast.error(err);
+      }
+    }
+  };
+
+  const deleteFunc = async () => {
+    try {
+      const res = await axios.delete(
+        `/api/admin/${user_id}/ticket/${ticket_id}/delete_ticket`
+      );
+      const data = await res.data;
+      if (data.status === 200) {
+        navigate(`/user/${user_id}/tickets`);
       }
     } catch (err) {
       console.log(err);
@@ -325,12 +375,18 @@ const ViewTicketDetails = () => {
               </select>
             </div>
           )}
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-4 gap-2">
             <button
-              onClick={logFunc}
+              onClick={() => setShowLogs(true)}
               className="py-2 px-6 text-white bg-teal-500 rounded hover:bg-emerald-600"
             >
               Show Logs
+            </button>
+            <button
+              onClick={deleteFunc}
+              className="py-2 px-6 text-white bg-red-500 rounded hover:bg-red-600"
+            >
+              Delete Ticket
             </button>
           </div>
         </div>
@@ -377,45 +433,13 @@ const ViewTicketDetails = () => {
       ) : null}
       {showLogs ? (
         <>
-          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-            <div className="relative w-auto my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none min-h-[50vh] max-h-[50vh]">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">Logs of ticket</h3>
-                </div>
-                {/*body*/}
-                <div className="relative p-4 flex-auto overflow-y-auto bg-slate-100">
-                  Hello
-                </div>
-                <div>
-                  <input
-                    className="p-4 w-full border border-1 border-black"
-                    placeholder="Type something..."
-                  />
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
-                  <button
-                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={() => setShowLogs(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                    type="button"
-                    onClick={setEngineer}
-                  >
-                    Save Changes
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="opacity-60 fixed inset-0 z-40 bg-slate-900"></div>
+          <TextModal
+            ticket={ticket}
+            onClose={() => setShowLogs(false)}
+            onAddMessage={sendTextMessage}
+            textMessage={textMessage}
+            setTextMessage={setTextMessage}
+          />
         </>
       ) : null}
     </>

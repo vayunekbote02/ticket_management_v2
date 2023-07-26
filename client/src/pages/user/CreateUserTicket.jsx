@@ -24,7 +24,6 @@ const CreateUserTicket = () => {
   // main submit function
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Starting submit");
     const currentDate = new Date();
     const newComplaint = {
       //user_id: user_id, //user_id is coming from the URL itself and then it is passed to the backend

@@ -169,6 +169,7 @@ const UserTickets = () => {
               <option value="accepted">Accepted Tickets</option>
               <option value="notAccepted">Not Accepted Tickets</option>
               <option value="highprior">High Priority Tickets</option>
+              <option value="unassigned">Not Assigned Tickets</option>
             </select>
           )}
         </div>
@@ -197,16 +198,23 @@ const UserTickets = () => {
                   <th className="py-2 px-4">
                     <h3 className="text-lg font-bold">Classification</h3>
                   </th>
-                  <th className="py-2 px-4">
-                    <h3 className="text-lg font-bold">Channel</h3>
-                  </th>
+                  {role !== "9087-t1-vaek-123-riop" && (
+                    <th className="py-2 px-4">
+                      <h3 className="text-lg font-bold">Channel</h3>
+                    </th>
+                  )}
                   <th className="py-2 px-4">
                     <h3 className="text-lg font-bold">Created At</h3>
                   </th>
                   {role === "9087-t1-vaek-123-riop" && (
-                    <th className="py-2 px-4">
-                      <h3 className="text-lg font-bold">Accepted?</h3>
-                    </th>
+                    <>
+                      <th className="py-2 px-4">
+                        <h3 className="text-lg font-bold">Accepted?</h3>
+                      </th>
+                      <th className="py-2 px-4">
+                        <h3 className="text-lg font-bold">Assigned?</h3>
+                      </th>
+                    </>
                   )}
                   <th className="py-2 px-4">
                     <h3 className="text-lg font-bold">Resolved</h3>
@@ -227,10 +235,12 @@ const UserTickets = () => {
                       return ticket.accepted === 0;
                     } else if (selectedFilter === "highprior") {
                       return ticket.priority === "high";
+                    } else if (selectedFilter === "unassigned") {
+                      return ticket.assignedEngineer === "";
                     }
                     return true;
                   })
-                  .map((ticket, index) => (
+                  .map((ticket) => (
                     <tr
                       key={ticket.id}
                       onClick={() => handleTicketClick(ticket.id)}
@@ -247,9 +257,11 @@ const UserTickets = () => {
                       <td className="py-2 px-4 text-center">
                         {ticket.classification}
                       </td>
-                      <td className="py-2 px-4 text-center">
-                        {ticket.channel}
-                      </td>
+                      {role !== "9087-t1-vaek-123-riop" && (
+                        <td className="py-2 px-4 text-center">
+                          {ticket.channel}
+                        </td>
+                      )}
                       <td className="py-2 px-4 text-center">
                         {new Date(ticket.createdAt).toLocaleString("en-IN", {
                           timeZone: "Asia/Kolkata",
@@ -258,9 +270,14 @@ const UserTickets = () => {
                         })}
                       </td>
                       {role === "9087-t1-vaek-123-riop" && (
-                        <td className="py-2 px-4 text-center">
-                          {ticket.accepted === 1 ? "Yes" : "No"}
-                        </td>
+                        <>
+                          <td className="py-2 px-4 text-center">
+                            {ticket.accepted === 1 ? "Yes" : "No"}
+                          </td>
+                          <td className="py-2 px-4 text-center">
+                            {ticket.assignedEngineer ? "Yes" : "No"}
+                          </td>
+                        </>
                       )}
                       <td className="py-2 px-4 text-center">
                         {ticket.resolved ? "Yes" : "No"}

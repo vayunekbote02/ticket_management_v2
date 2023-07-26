@@ -106,9 +106,36 @@ const updateTicketStatus = async (req, res) => {
   }
 };
 
+const addMessage = async (req, res) => {
+  const { user_id } = req.params;
+  const { ticket_id } = req.params;
+  const { userRole, textMessage } = req.body;
+
+  if (user_id !== req.userId) {
+    return res.sendStatus(403);
+  }
+
+  const updatedTicket = await Ticket.findOneAndUpdate(
+    { id: ticket_id },
+    {
+      $push: {
+        logs: {
+          timestamp: Date.now(),
+          userRole: userRole,
+          message: textMessage,
+        },
+      },
+    },
+    { new: true } // This option returns the updated ticket after the update
+  );
+  // console.log(ticket.logs);
+  res.json({ status: 200 });
+};
+
 module.exports = {
   fetchTickets,
   createTicket,
   fetchSingleTicket,
   updateTicketStatus,
+  addMessage,
 };
