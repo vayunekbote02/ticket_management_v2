@@ -21,22 +21,56 @@ const fetchTickets = async (req, res) => {
 const exportTickets = async (req, res) => {
   try {
     const { user_id } = req.params;
-
+    const { duration } = req.query;
+    // const duration = "month";
     if (user_id !== req.userId) {
       return res.sendStatus(403);
     }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    var start, end;
+    if (duration === "day") {
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      start = today;
+      end = tomorrow;
+    } else if (duration === "month") {
+      const startOfMonth = new Date(today);
+      startOfMonth.setDate(1); // Set the date to the first day of the month
+      const nextMonth = new Date(today);
+      nextMonth.setMonth(nextMonth.getMonth() + 1);
+      const endOfMonth = new Date(nextMonth);
+      endOfMonth.setDate(0); // Set the date to the last day of the current month
+      start = startOfMonth;
+      end = endOfMonth;
+    }
+
+    // Find tickets created on the current date
     let ticket_headers = [];
-    const tickets = await Ticket.find({});
-    tickets.forEach((ticket) => {
+    const ticketsByDay = await Ticket.find({
+      createdAt: { $gte: start, $lt: end },
+    });
+
+    ticketsByDay.forEach((ticket) => {
       const { name, email, issue, classification, resolved } = ticket;
       ticket_headers.push({ name, email, issue, classification, resolved });
     });
     const csvFields = ["Name", "Email", "Issue", "Classification", "Resolved"];
     const csvParser = new CsvParser({ csvFields });
     const csvData = csvParser.parse(ticket_headers);
+    // Get the day and month in the format "DD" and "MM" respectively
+    const day = String(today.getDate()).padStart(2, "0");
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
 
+    // Construct the filename using the current date
+    const filename =
+      duration === "day"
+        ? `tickets_${day}_${month}.csv`
+        : `tickets_${month}.csv`;
     res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", "attachment: filename=tickets.csv");
+    res.setHeader("Content-Disposition", `attachment; filename=${filename}`);
     res.status(200).end(csvData);
   } catch (err) {
     res.json({ status: 400, error: err.message });

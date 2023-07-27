@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 
@@ -6,6 +7,31 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const userRole = localStorage.getItem("role");
+
+  const getTicketExport = async (duration) => {
+    const res = await axios.get(`/api/admin/${user_id}/export_tickets`, {
+      params: { duration: duration },
+      responseType: "blob",
+      headers: {
+        // Authorization: `Bearer ${cookies.token}`, // Include the token in the request headers
+        "Content-Type": "application/json",
+      },
+    });
+    const contentDisposition = res.headers["content-disposition"];
+    const filename = contentDisposition.split("=")[1].trim();
+
+    const csvData = new Blob([res.data], { type: "text/csv" });
+    const downloadUrl = URL.createObjectURL(csvData);
+
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = `${filename}`; // Get the formatted date as the filename
+    link.click();
+
+    // Cleanup
+    URL.revokeObjectURL(downloadUrl);
+  };
+
   return (
     <header className="text-gray-600 body-font shadow-lg rounded-xl bg-slate-50">
       <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center justify-between">
@@ -131,11 +157,33 @@ const Navbar = () => {
                 </span>
               </Link>
               {localStorage.getItem("role") === "9087-t1-vaek-123-riop" && (
-                <Link to={`/user/${user_id}/create_engineer`}>
-                  <span className="mr-5 hover:text-gray-900 text-green-500">
-                    Create Engineer
-                  </span>
-                </Link>
+                <>
+                  <Link to={`/user/${user_id}/create_engineer`}>
+                    <span className="mr-5 hover:text-gray-900 text-green-500">
+                      Create Engineer
+                    </span>
+                  </Link>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      getTicketExport("month");
+                    }}
+                  >
+                    <span className="mr-5 hover:text-gray-900 text-yellow-600">
+                      Export Month Tickets
+                    </span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      getTicketExport("day");
+                    }}
+                  >
+                    <span className="mr-5 hover:text-gray-900 text-amber-600">
+                      Export Day Tickets
+                    </span>
+                  </button>
+                </>
               )}
             </nav>
             <button
