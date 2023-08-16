@@ -46,6 +46,7 @@ const exportTickets = async (req, res) => {
       start = startOfMonth;
       end = endOfMonth;
     }
+    console.log("type set");
 
     // Find tickets created on the current date
     let ticket_headers = [];
@@ -57,12 +58,14 @@ const exportTickets = async (req, res) => {
       const { name, email, issue, classification, resolved } = ticket;
       ticket_headers.push({ name, email, issue, classification, resolved });
     });
+
     const csvFields = ["Name", "Email", "Issue", "Classification", "Resolved"];
     const csvParser = new CsvParser({ csvFields });
     const csvData = csvParser.parse(ticket_headers);
     // Get the day and month in the format "DD" and "MM" respectively
     const day = String(today.getDate()).padStart(2, "0");
     const month = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    console.log("not reached here");
 
     // Construct the filename using the current date
     const filename =

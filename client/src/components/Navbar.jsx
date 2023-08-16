@@ -9,6 +9,7 @@ const Navbar = () => {
   const userRole = localStorage.getItem("role");
 
   const getTicketExport = async (duration) => {
+    console.log(duration);
     const res = await axios.get(`/api/admin/${user_id}/export_tickets`, {
       params: { duration: duration },
       responseType: "blob",
@@ -163,7 +164,7 @@ const Navbar = () => {
                       Create Engineer
                     </span>
                   </Link>
-                  <button
+                  <Link
                     onClick={(e) => {
                       e.preventDefault();
                       getTicketExport("month");
@@ -172,7 +173,7 @@ const Navbar = () => {
                     <span className="mr-5 hover:text-gray-900 text-yellow-600">
                       Export Month Tickets
                     </span>
-                  </button>
+                  </Link>
                   <button
                     onClick={(e) => {
                       e.preventDefault();

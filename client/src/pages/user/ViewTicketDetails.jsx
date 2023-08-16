@@ -260,6 +260,7 @@ const ViewTicketDetails = () => {
       const data = await res.data;
       if (data.status === 200) {
         navigate(`/user/${user_id}/tickets`);
+        toast.success("The ticket has been successfully deleted.");
       }
     } catch (err) {
       console.log(err);
