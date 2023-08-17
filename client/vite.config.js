@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "https://ticketify-api.vercel.app",
+        target: "https://ticketify-api.vercel.app/",
         secure: false,
       },
     },
