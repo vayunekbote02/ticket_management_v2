@@ -21,14 +21,14 @@ mongoose
 // Initializations
 const app = express();
 app.use(express.json());
-app.use(
-  cors({
-    origin: ["https://ticketify-silk.vercel.app"],
-    methods: ["GET", "POST", "PUT", "UPDATE"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+// app.use(
+//   cors({
+//     origin: ["https://ticketify-silk.vercel.app"],
+//     methods: ["GET", "POST", "PUT", "UPDATE"],
+//     credentials: true,
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
 app.use(cookieParser());
 
 // Routes
