@@ -8,8 +8,8 @@
   ],
   "rewrites": [
     {
-        "source": "/api/:path*",
-        "destination": "https://ticketify-api.vercel.app/:path*"
+        "source": "/api/(.*)",
+        "destination": "https://ticketify-api.vercel.app/$1"
     },
     {
         "source": "/(.*)",
