@@ -21,7 +21,7 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const res = await axios.post("/api/auth/login", obj, {
+      const res = await axios.post("https://ticketify-api.vercel.app/api/auth/login", obj, {
         headers: {
           "Content-Type": "application/json",
         },
