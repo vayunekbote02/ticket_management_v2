@@ -23,7 +23,7 @@ const CreateEngineer = () => {
     setShowEngineers(true);
     try {
       const res = await axios.get(
-        `/api/admin/${user_id}/engineers`,
+        `https://ticketify-api.vercel.app/api/admin/${user_id}/engineers`,
         {},
         {
           headers: { "Content-Type": "application/json" },
@@ -40,7 +40,7 @@ const CreateEngineer = () => {
     e.preventDefault();
     try {
       const res = await axios.put(
-        `/api/admin/${user_id}/create_engineer`,
+        `https://ticketify-api.vercel.app/api/admin/${user_id}/create_engineer`,
         { email: email },
         {
           headers: { "Content-Type": "application/json" },

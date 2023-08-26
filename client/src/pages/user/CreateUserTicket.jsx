@@ -44,7 +44,7 @@ const CreateUserTicket = () => {
 
     try {
       const response = await axios.post(
-        `/api/user/${user_id}/createticket`,
+        `https://ticketify-api.vercel.app/api/user/${user_id}/createticket`,
         newComplaint,
         {
           headers: {

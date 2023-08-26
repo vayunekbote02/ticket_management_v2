@@ -38,7 +38,9 @@ const ViewTicketDetails = () => {
 
     const fetchTicketDetails = async () => {
       try {
-        const res = await axios.get(`/api/user/${user_id}/ticket/${ticket_id}`);
+        const res = await axios.get(
+          `https://ticketify-api.vercel.app/api/user/${user_id}/ticket/${ticket_id}`
+        );
         const ticket = await res.data.ticket;
 
         if (isMounted) {
@@ -64,7 +66,7 @@ const ViewTicketDetails = () => {
     const fetchEngineers = async () => {
       try {
         const res = await axios.get(
-          `/api/admin/${user_id}/engineers`,
+          `https://ticketify-api.vercel.app/api/admin/${user_id}/engineers`,
           {},
           {
             headers: {
@@ -104,7 +106,7 @@ const ViewTicketDetails = () => {
     const updateResolvedStatus = async () => {
       try {
         await axios.put(
-          `/api/user/${user_id}/ticket/${ticket_id}/update`,
+          `https://ticketify-api.vercel.app/api/user/${user_id}/ticket/${ticket_id}/update`,
           {
             resolved: status,
           },
@@ -128,7 +130,7 @@ const ViewTicketDetails = () => {
     setShowModal(true);
     try {
       const res = await axios.get(
-        `/api/admin/${user_id}/engineers`,
+        `https://ticketify-api.vercel.app/api/admin/${user_id}/engineers`,
         {},
         {
           headers: {
@@ -161,7 +163,7 @@ const ViewTicketDetails = () => {
     setShowModal(false);
     try {
       const res = await axios.put(
-        `/api/admin/${user_id}/ticket/${ticket_id}/set_engineer`,
+        `https://ticketify-api.vercel.app/api/admin/${user_id}/ticket/${ticket_id}/set_engineer`,
         {
           engineerId,
         },
@@ -186,7 +188,7 @@ const ViewTicketDetails = () => {
   const acceptTicket = async () => {
     try {
       const res = await axios.put(
-        `/api/admin/${user_id}/ticket/${ticket_id}/accept_ticket`
+        `https://ticketify-api.vercel.app/api/admin/${user_id}/ticket/${ticket_id}/accept_ticket`
       );
       const data = await res.data;
       if (data.status === 200) {
@@ -203,7 +205,7 @@ const ViewTicketDetails = () => {
     setSelectedPriority(e.target.value);
     try {
       const res = await axios.put(
-        `/api/admin/${user_id}/ticket/${ticket_id}/set_priority`,
+        `https://ticketify-api.vercel.app/api/admin/${user_id}/ticket/${ticket_id}/set_priority`,
         {
           priority: e.target.value,
         },
@@ -230,7 +232,7 @@ const ViewTicketDetails = () => {
     if (textMessage !== "") {
       try {
         const res = await axios.put(
-          `/api/${getRole()}/${user_id}/ticket/${ticket_id}/add_message`,
+          `https://ticketify-api.vercel.app/api/${getRole()}/${user_id}/ticket/${ticket_id}/add_message`,
           {
             userRole,
             textMessage,
@@ -255,7 +257,7 @@ const ViewTicketDetails = () => {
   const deleteFunc = async () => {
     try {
       const res = await axios.delete(
-        `/api/admin/${user_id}/ticket/${ticket_id}/delete_ticket`
+        `https://ticketify-api.vercel.app/api/admin/${user_id}/ticket/${ticket_id}/delete_ticket`
       );
       const data = await res.data;
       if (data.status === 200) {

@@ -10,14 +10,17 @@ const Navbar = () => {
 
   const getTicketExport = async (duration) => {
     console.log(duration);
-    const res = await axios.get(`/api/admin/${user_id}/export_tickets`, {
-      params: { duration: duration },
-      responseType: "blob",
-      headers: {
-        // Authorization: `Bearer ${cookies.token}`, // Include the token in the request headers
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await axios.get(
+      `https://ticketify-api.vercel.app/api/admin/${user_id}/export_tickets`,
+      {
+        params: { duration: duration },
+        responseType: "blob",
+        headers: {
+          // Authorization: `Bearer ${cookies.token}`, // Include the token in the request headers
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const contentDisposition = res.headers["content-disposition"];
     const filename = contentDisposition.split("=")[1].trim();
 
@@ -77,7 +80,9 @@ const Navbar = () => {
                     </button>
                     <button
                       onClick={() => {
-                        fetch("/api/auth/logout");
+                        fetch(
+                          "https://ticketify-api.vercel.app/api/auth/logout"
+                        );
                         localStorage.removeItem("role");
                         localStorage.removeItem("li");
                         localStorage.removeItem("uid");
@@ -189,7 +194,7 @@ const Navbar = () => {
             </nav>
             <button
               onClick={() => {
-                fetch("/api/auth/logout");
+                fetch("https://ticketify-api.vercel.app/api/auth/logout");
                 localStorage.removeItem("role");
                 localStorage.removeItem("li");
                 localStorage.removeItem("uid");

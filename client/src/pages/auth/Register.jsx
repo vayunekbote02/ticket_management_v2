@@ -17,7 +17,7 @@ const Register = () => {
     const userId = generateUserId();
     try {
       const response = await axios.post(
-        "/api/auth/register",
+        "https://ticketify-api.vercel.app/api/auth/register",
         { ...obj, userId },
         {
           headers: {

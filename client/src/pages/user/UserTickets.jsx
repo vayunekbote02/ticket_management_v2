@@ -21,13 +21,16 @@ const UserTickets = () => {
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const res = await axios.get(`/api/${getRole()}/${user_id}/tickets`, {
-          headers: {
-            // Authorization: `Bearer ${cookies.token}`, // Include the token in the request headers
-            "Content-Type": "application/json",
-          },
-          //   withCredentials: true,
-        });
+        const res = await axios.get(
+          `https://ticketify-api.vercel.app/api/${getRole()}/${user_id}/tickets`,
+          {
+            headers: {
+              // Authorization: `Bearer ${cookies.token}`, // Include the token in the request headers
+              "Content-Type": "application/json",
+            },
+            //   withCredentials: true,
+          }
+        );
 
         const data = await res.data;
         if (data.status === 200) {
