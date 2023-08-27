@@ -8,4 +8,16 @@ if (data.role === "admin") {
           localStorage.setItem("role", "4032-t3-raek-789-chop");
         }
 
-        
+
+, 
+  "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "https://ticketify-api.vercel.app/$1"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/"
+        }
+    ]
+}
