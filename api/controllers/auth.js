@@ -43,6 +43,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(email, password);
 
     // Find the user by email
     const user = await UserData.findOne({ email });
@@ -60,6 +61,7 @@ const login = async (req, res) => {
         { userId: user.userId, userRole: user.role },
         process.env.ACCESS_TOKEN_SECRET,
         { expiresIn: "1h" }
+      console.log("Password Matched");
       );
 
       return res
